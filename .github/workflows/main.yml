@@ -1,33 +1,17 @@
-# 工作流名称，自定义
-name: Generate GitHub App Token
-
-# 触发条件：可手动触发（方便测试），也可按需加其他触发条件（如push）
+name: Generate App Token (Final Fix)
 on:
-  workflow_dispatch:  # 手动触发
+  workflow_dispatch:
 
 jobs:
-  generate-token:
-    runs-on: ubuntu-latest  # 运行环境，固定用ubuntu即可
+  token:
+    runs-on: ubuntu-latest
     steps:
-      # 步骤1：检出仓库代码（可选，若后续要操作仓库则需要）
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # 步骤2：运行tibdex/github-app-token生成令牌
-      - name: Generate GitHub App Token
+      - name: Get GitHub App Token
         uses: tibdex/github-app-token@v1.8.2
-        id: generate-token  # 给步骤命名，后续引用令牌用
+        id: get-token
         with:
-          app_id: ${{ secrets.APP_ID }}  # 引用步骤2配置的APP_ID
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}  # 引用私钥
-          github_api_url: https://api.github.com  # 你的原有配置
-          repository: jingxue33/ip1122  # 你的原有配置
-          expiration_minutes: 60  # 令牌有效期，可选（默认60分钟）
-
-      # 步骤3：验证令牌是否生成成功（可选，用于测试）
-      - name: Verify token
-        run: |
-          echo "Generated token: ${{ steps.generate-token.outputs.token }}"
-          # 可选：用令牌测试访问仓库（验证权限）
-          curl -H "Authorization: token ${{ steps.generate-token.outputs.token }}" \
-               https://api.github.com/repos/jingxue33/ip1122
+          # 仅保留v1.8.2支持的参数，且引用语法绝对正确
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          github_api_url: https://api.github.com
+          repository: jingxue33/ip1122
